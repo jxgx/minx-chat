@@ -4,46 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minx – Your AI Companion</title>
-    <style>
+     <style>
         * {
             box-sizing: border-box;
         }
+
+        /* 1. THE RESPONSIVE BACKGROUND */
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f0f2f5;
+            /* Image from Unsplash - replace the URL below if you want a different one */
+            background-image: url('bg.jpg'); 
+            background-size: cover;        /* Ensures image covers the screen on any device */
+            background-position: center;  /* Keeps the image centered */
+            background-attachment: fixed; /* Creates a parallax effect (image stays still while scrolling) */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            color: white; /* General text color to white for dark mode */
         }
+
         .chat-card {
             max-width: 700px;
             width: 100%;
-            background: white;
+            
+            /* 2. GLASSMORPHISM EFFECT */
+            background: rgba(20, 20, 25, 0.7); /* Dark, semi-transparent background */
+            backdrop-filter: blur(15px);       /* Blurs the image behind the card */
+            -webkit-backdrop-filter: blur(15px); /* Safari support */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            
             border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); /* Deeper shadow for depth */
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
+
         .chat-header {
-            background: #2c3e50;
+            background: linear-gradient(90deg, #2c003e, #d81b60); /* Dark purple to pink gradient */
             padding: 18px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+
         .chat-header h2 {
             margin: 0;
             color: white;
             font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
+
         .chat-messages {
             height: 500px;
             overflow-y: auto;
             padding: 20px;
-            background: #ffffff;
+            background: transparent; /* Transparent to see the blur */
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
+
+        /* Custom Scrollbar for a polished look */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
         .message {
             max-width: 80%;
             padding: 12px 16px;
@@ -51,36 +85,57 @@
             line-height: 1.4;
             word-wrap: break-word;
             white-space: pre-wrap;
+            font-size: 1rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Slight shadow for readability */
         }
+
         .user-message {
             align-self: flex-end;
-            background: #3498db;
+            background: linear-gradient(135deg, #d81b60, #ad1457); /* Pink/Magenta gradient */
             color: white;
             border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.4);
         }
+
         .bot-message {
             align-self: flex-start;
-            background: #e9ecef;
-            color: #2c3e50;
+            background: rgba(60, 60, 70, 0.8); /* Dark grey glass */
+            color: #e0e0e0; /* Light grey text */
             border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .chat-input-area {
             display: flex;
             gap: 12px;
             padding: 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #e2e8f0;
+            background: rgba(0, 0, 0, 0.3); /* Darker footer */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .chat-input-area input {
             flex: 1;
             padding: 12px 18px;
-            border: 1px solid #ced4da;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 40px;
             font-size: 1rem;
             outline: none;
+            color: white;
+            transition: background 0.3s;
         }
+        
+        .chat-input-area input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .chat-input-area input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #d81b60;
+        }
+
         .chat-input-area button {
-            background: #3498db;
+            background: #d81b60;
             border: none;
             padding: 0 24px;
             border-radius: 40px;
@@ -88,18 +143,23 @@
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
+            box-shadow: 0 0 10px rgba(216, 27, 96, 0.5);
+            transition: transform 0.1s, box-shadow 0.2s;
         }
-        .chat-input-area button:hover {
-            background: #2980b9;
+
+        .chat-input-area button:active {
+            transform: scale(0.95);
         }
+
         .typing {
             align-self: flex-start;
-            background: #e9ecef;
-            color: #6c757d;
+            background: rgba(255,255,255,0.1);
+            color: #b0b0b0;
             padding: 10px 16px;
             border-radius: 20px;
             font-style: italic;
             font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.05);
         }
     </style>
 </head>
