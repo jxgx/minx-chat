@@ -155,7 +155,19 @@ Always respond in a way that keeps the user interested, intrigued, and coming ba
     function addMessage(role, content) {
         const msgDiv = document.createElement('div');
         msgDiv.classList.add('message', role === 'user' ? 'user-message' : 'bot-message');
-        msgDiv.textContent = content;
+        
+        // FIX 1: Decode HTML entities (like &#x20;) by using a temporary div
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        const cleanText = tempDiv.textContent;
+
+        // FIX 2: Convert *asterisks* to <i>italics</i> for the Roleplay persona
+        // This looks for text between * and * and wraps it in HTML italics tags
+        const formattedText = cleanText.replace(/\*([^*]+)\*/g, '<i>$1</i>');
+
+        // Set the final formatted HTML
+        msgDiv.innerHTML = formattedText;
+        
         chatMessagesDiv.appendChild(msgDiv);
         chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
         return msgDiv;
