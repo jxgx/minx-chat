@@ -1,4 +1,4 @@
-// api/chat.js - CommonJS version for Hermes 70B
+// api/chat.js
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -6,11 +6,15 @@ module.exports = async function handler(req, res) {
 
   try {
     const { message, systemPrompt, temperature, maxTokens, history } = req.body;
+    
+    // Debugging logs (check your Vercel function logs)
+    console.log("📥 Received systemPrompt length:", systemPrompt?.length);
 
     if (!message) {
-      return res.status(400). json({ error: 'Message is required' });
+      return res.status(400).json({ error: 'Message is required' });
     }
 
+    // Construct messages array
     const messages = [
       { role: "system", content: systemPrompt || "You are a helpful assistant." },
       ...(history || []),
@@ -22,12 +26,15 @@ module.exports = async function handler(req, res) {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        // OpenRouter allows you to identify your app
+        'HTTP-Referer': process.env.VERCEL_URL || 'http://localhost:3000', 
+        'X-Title': 'Minx Chat',
       },
       body: JSON.stringify({
-        model: 'nousresearch/hermes-3-llama-3.1-70b',
+        model: 'sao10k/l3.3-euryale-70b',
         messages: messages,
         temperature: temperature ?? 0.9,
-        max_tokens: maxTokens ?? 400,
+        max_tokens: maxTokens ?? 1200, // Ensure backend respects the higher token limit
       }),
     });
 
@@ -42,7 +49,7 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ reply });
 
   } catch (error) {
-    console.error('Vercel function error:', error);
+    console.error('Server error:', error);
     return res.status(500).json({ error: error.message });
   }
 };
