@@ -15,7 +15,7 @@
             background-color: #000000;
             background-image: url('https://store-na-phx-3.gofile.io/download/direct/9bd6ad58-8592-4e84-85ee-840d90c32ad9/bg.png'); 
             background-size: cover;        /* Ensures image covers the screen on any device */
-            background-position: center;  /* Keeps the image centered */
+            background-position: center 80%;  /* Keeps the image centered */
             background-attachment: fixed; /* Creates a parallax effect (image stays still while scrolling) */
             display: flex;
             justify-content: center;
@@ -171,13 +171,74 @@
             font-style: italic; /* Keeps it italic */
             font-weight: 600;    /* Makes it slightly bolder/more visible */
             text-shadow: 0 0 5px rgba(255, 128, 171, 0.5); /* Slight glow effect */
+            
+                    /* --- COMPANION CARD STYLING --- */
+        .companion-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.4); /* Dark footer */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #d81b60;
+        }
+
+        .stat-details h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            color: #b0b0b0;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #ff80ab; /* Pink text */
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ff80ab;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #ff80ab;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
         }
     </style>
 </head>
 <body>
 <div class="chat-card">
     <div class="chat-header">
-        <h2>❤️ MINX: AI CHAT // XenoSlit AI Ops ❤️</h2>
+        <h2>❤️ MINX: YOUR AI COMPANION ❤️</h2>
     </div>
     <div class="chat-messages" id="chatMessages">
         <div class="message bot-message">Hey... I'm Minx. What's on your mind?</div>
