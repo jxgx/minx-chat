@@ -1,0 +1,1 @@
+Minx is a character-driven AI interface focused on narrative immersion and persona consistency. The project provides a persistent "companion" experience, leveraging advanced prompt engineering to maintain character voice and backstory across interactions.
