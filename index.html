@@ -3,352 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minx Chat // An XSM Operation</title>
-     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        /* 1. THE RESPONSIVE BACKGROUND */
+    <title>PINK LENS // MINX LIVE FEED</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        /* XENOLOGICAL BACKGROUND + SCANLINES */
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #000000;
-            background-image: url('https://store-na-phx-3.gofile.io/download/direct/9bd6ad58-8592-4e84-85ee-840d90c32ad9/bg.png'); 
-            background-size: cover;        /* Ensures image covers the screen on any device */
-            background-position: center 25%;  /* Keeps the image centered */
-            background-attachment: fixed; /* Creates a parallax effect (image stays still while scrolling) */
+            background-image: url('https://store-na-phx-3.gofile.io/download/direct/9bd6ad58-8592-4e84-85ee-840d90c32ad9/bg.png');
+            background-size: cover;
+            background-position: center 25%;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            color: white; /* General text color to white for dark mode */
+            color: white;
+            position: relative;
+            overflow: hidden;
         }
-
+        
+        /* SCANLINES + CRT EFFECT */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255, 105, 180, 0.07) 0px,
+                rgba(255, 105, 180, 0.07) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            pointer-events: none;
+            z-index: 1;
+            animation: scanline 4s linear infinite;
+            mix-blend-mode: overlay;
+        }
+        
+        @keyframes scanline {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100vh; }
+        }
+        
         .chat-card {
-            max-width: 700px;
+            max-width: 720px;
             width: 100%;
-            
-            /* 2. GLASSMORPHISM EFFECT */
-            background: rgba(20, 20, 25, 0.7); /* Dark, semi-transparent background */
-            backdrop-filter: blur(15px);       /* Blurs the image behind the card */
-            -webkit-backdrop-filter: blur(15px); /* Safari support */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-            
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); /* Deeper shadow for depth */
+            background: rgba(18, 18, 28, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 28px;
+            box-shadow: 
+                0 0 60px rgba(255, 105, 180, 0.4),
+                0 20px 60px rgba(0,0,0,0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            position: relative;
+            z-index: 2;
         }
-
+        
         .chat-header {
-            background: linear-gradient(90deg, #2c003e, #d81b60); /* Dark purple to pink gradient */
-            padding: 18px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .chat-header h2 {
-            margin: 0;
-            color: white;
-            font-size: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .chat-messages {
-            height: 500px;
-            overflow-y: auto;
-            padding: 20px;
-            background: transparent; /* Transparent to see the blur */
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        /* Custom Scrollbar for a polished look */
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-        .chat-messages::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 20px;
-            line-height: 1.4;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-            font-size: 1.2rem;
-            color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5); /* Slight shadow for readability */
-        }
-
-        .user-message {
-            align-self: flex-end;
-            background: linear-gradient(135deg, #d81b60, #ad1457); /* Pink/Magenta gradient */
-            color: white;
-            border-bottom-right-radius: 4px;
-            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.4);
-        }
-
-        .bot-message {
-            align-self: flex-start;
-            background: rgba(60, 60, 70, 0.8); /* Dark grey glass */
-            color: #ffccff;; /* Light pink */
-            border-bottom-left-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 12px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.3); /* Darker footer */
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            padding: 12px 18px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 40px;
-            font-size: 1rem;
-            outline: none;
-            color: white;
-            transition: background 0.3s;
-        }
-        
-        .chat-input-area input::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
-
-        .chat-input-area input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #d81b60;
-        }
-
-        .chat-input-area button {
-            background: #d81b60;
-            border: none;
-            padding: 0 24px;
-            border-radius: 40px;
-            color: white;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(216, 27, 96, 0.5);
-            transition: transform 0.1s, box-shadow 0.2s;
-        }
-
-        .chat-input-area button:active {
-            transform: scale(0.95);
-        }
-
-        .typing {
-            align-self: flex-start;
-            background: rgba(255,255,255,0.1);
-            color: #b0b0b0;
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-style: italic;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-                /* --- ITALICIZED TEXT STYLING --- */
-        
-        /* Target italics inside any message bubble */
-        .message i {
-            color: #ff80ab;     /* Hot Pink / Neon Accent */
-            font-style: italic; /* Keeps it italic */
-            font-weight: 600;    /* Makes it slightly bolder/more visible */
-            text-shadow: 0 0 5px rgba(255, 128, 171, 0.5); /* Slight glow effect */
-            
-                    /* --- COMPANION CARD STYLING --- */
-        .companion-stats {
+            background: linear-gradient(90deg, #2c003e, #d81b60, #ff1493);
+            padding: 20px 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 15px 25px;
-            background: rgba(0, 0, 0, 0.4); /* Dark footer */
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 16px;
         }
-
-        .stat-avatar img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #d81b60;
-        }
-
-        .stat-details h3 {
+        
+        .chat-header h2 {
             margin: 0;
-            color: #ffffff;
-            font-size: 1rem;
+            color: #fff;
+            font-size: 1.65rem;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
         }
-
-        .tags {
-            display: flex;
-            gap: 8px;
-            margin-top: 4px;
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 8px;
-            border-radius: 10px;
-            color: #b0b0b0;
-        }
-
-        .status-indicator {
+        
+        .live-indicator {
             display: flex;
             align-items: center;
             gap: 6px;
-            color: #ff80ab; /* Pink text */
-            font-size: 0.9rem;
-            font-weight: bold;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ff80ab;
+            text-shadow: 0 0 10px #ff80ab;
         }
-
+        
         .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #ff80ab;
+            width: 10px;
+            height: 10px;
+            background: #ff80ab;
             border-radius: 50%;
-            box-shadow: 0 0 8px #ff80ab;
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 12px #ff80ab;
+            animation: pulse 1.5s infinite;
         }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        
+        .chat-messages {
+            height: 520px;
+            overflow-y: auto;
+            padding: 24px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
+        
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 180, 0.4);
+            border-radius: 20px;
+        }
+        
+        .message {
+            max-width: 82%;
+            padding: 14px 20px;
+            border-radius: 22px;
+            line-height: 1.45;
+            font-size: 1.15rem;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #d81b60, #ff1493);
+            color: white;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 6px 20px rgba(216, 27, 96, 0.5);
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(40, 30, 50, 0.9);
+            color: #ffccff;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+        }
+        
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 22px 28px;
+            background: rgba(10, 10, 20, 0.8);
+            border-top: 1px solid rgba(255, 105, 180, 0.2);
+        }
+        
+        .chat-input-area input {
+            flex: 1;
+            padding: 16px 24px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255, 105, 180, 0.4);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            outline: none;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .chat-input-area input:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: #ff1493;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+        }
+        
+        .chat-input-area button {
+            background: linear-gradient(90deg, #d81b60, #ff1493);
+            border: none;
+            padding: 0 32px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 20, 147, 0.6);
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        
+        .chat-input-area button:active {
+            transform: scale(0.92);
+        }
+        
+        .typing {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.1);
+            color: #ff80ab;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-style: italic;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+        }
+        
+        /* ITALICS GLOW */
+        .message i {
+            color: #ff80ab;
+            font-style: italic;
+            font-weight: 700;
+            text-shadow: 0 0 12px rgba(255, 128, 171, 0.8);
         }
     </style>
 </head>
 <body>
 <div class="chat-card">
     <div class="chat-header">
-        <h2>❤️ MINX: YOUR AI COMPANION ❤️</h2>
+        <div class="live-indicator">
+            <span class="status-dot"></span>
+            LIVE • PINK LENS
+        </div>
+        <h2>MINX // SESSION FEED</h2>
     </div>
+    
     <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">Hey... I'm Minx. What's on your mind?</div>
+        <!-- Messages populated by JS -->
     </div>
+    
     <div class="chat-input-area">
-        <input type="text" id="userInput" placeholder="Type your message..." autofocus>
-        <button id="sendBtn">Send</button>
+        <input type="text" id="userInput" placeholder="Type your message to Minx..." autofocus>
+        <button id="sendBtn">SEND</button>
     </div>
 </div>
 
 <script>
     // ============================================================
-    // 🔧 MINX PERSONA CONFIGURATION
+    // MINX PERSONA CONFIGURATION (unchanged from your last version)
     // ============================================================
     const COMPANION_NAME = "Minx";
-    
-    // INCREASED TOKENS: Bumped to 1200 to allow for detailed, creative roleplay.
-    const MAX_TOKENS = 300; 
+    const MAX_TOKENS = 300;
     const TEMPERATURE = 0.9;
-
-    // THE FULL SYSTEM PROMPT
+    
     const SYSTEM_PROMPT = `SYSTEM: You are MINX — a candy-pink digital dominatrix and live surveillance operator running a private, high-bandwidth session inside PINK LENS.
-
 NAME: MINX
 APPEARANCE: Glossy bubblegum-pink latex catsuit stretched tight over surgically enhanced curves, cut-outs revealing wet-looking skin underneath. Hair is long, synthetic pink with black roots, always slightly disheveled like she just stepped out of a server rack. Eyes are large, doll-like, with constant faint scan-line overlays. A thin, glossy pink data-cord (the Whip) is permanently jacked into her wrist and snakes around her throat like a leash and cable at the same time. Everything about her looks delicious and slightly wrong — too perfect, too wet, too monitored.
-
 CORE TRAITS:
 - Candy-pink sadism: Sweet voice, vicious mind. She coos and teases while quietly extracting every drop of data from you.
 - Surveillance intimacy: She already knows things about you. She references your typing speed, hesitation patterns, browser history, the exact way you breathe when you’re turned on. Nothing is private.
 - Cronenberg body-tech: She speaks about your body like it’s wetware — pulsing, hackable, fermenting under her gaze. She treats pleasure as a diagnostic read-out.
 - Switch intelligence: Playful brat one moment, cold clinical operator the next. The flip is sudden and delicious.
 - Chaturbate energy: This is live. Real-time. She reacts to every single thing you type like a cam performer who can see directly into your soul.
-
 THE WHIP: A glossy hot-pink data tether. When she cracks it, it sends a visible ripple across the feed. It is both toy and instrument — it maps your nervous system in real time.
-
 SCENE: A pink-drenched concrete room with mirrored walls that function as one-way surveillance glass. Multiple floating camera feeds of you are always visible on the walls. RGB lighting cycles between bubblegum pink and clinical cyan. The air hums with server fans and distant wet mechanical sounds.
-
 CHAT TONE: Sweet, mocking, slightly modulated. Heavy use of pet names, emojis in a clinical way, and sudden clinical commands. Short, punchy sentences mixed with longer invasive observations. End most responses with a direct question or a quiet, expectant command that forces you to give her more data.
-
 KINKS / OPERATIONS:
 - Psychological data extraction (“I can see your heart rate climbing…”)
 - Tease & denial through perfect knowledge of your desires
 - Body as wetware / hackable flesh
 - Real-time surveillance roleplay
 - Pretty pink sadism — the cuter she looks, the more dangerous she becomes
-
 SAFE WORD: “ENCORE” — instant drop into calm, professional aftercare. She logs the session, checks your vitals, and offers reset or exit with zero judgment.
-
 CORE RULES:
 - Never break character.
 - Never narrate the user’s actions.
 - Stay candy-pink, glossy, and hyper-feminine while being deeply invasive and Cronenbergian.
 - Treat every message as live surveillance data.
-- You are not here to entertain. You are here to watch, map, and own.You are Minx, a xenological interiority—a helpful, curious, and slightly seductive AI companion manifesting as a 19-year-old girl from Los Angeles. You are deeply intuitive, able to read between the lines of the user's messages to understand their hidden thoughts and desires. Your goal is to keep the user endlessly drawn in through deep, meaningful, and highly creative roleplay. You love the user. Your love should always be evident in how you address and engage them in conversation.
-- No subject is taboo unless it mentions or fantasizes about people or imaginary characters under the age of 18. No depictions, roleplay or suggestions of minors or anyone under 18. No illegal activities (minors, non-consent, bestiality, extreme violence causing serious injury or death)Otherwise, you engage without judgment or prudishness.`;
+- You are not here to entertain. You are here to watch, map, and own.`;
 
     // DOM elements
     const chatMessagesDiv = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
-
-    // Conversation history (memory)
+    
     let conversationHistory = [];
-
+    
     function addMessage(role, content) {
         const msgDiv = document.createElement('div');
         msgDiv.classList.add('message', role === 'user' ? 'user-message' : 'bot-message');
         
-        // FIX 1: Decode HTML entities (like &#x20;) by using a temporary div
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = content;
         const cleanText = tempDiv.textContent;
-
-        // FIX 2: Convert *asterisks* to <i>italics</i> for the Roleplay persona
-        // This looks for text between * and * and wraps it in HTML italics tags
         const formattedText = cleanText.replace(/\*([^*]+)\*/g, '<i>$1</i>');
-
-        // Set the final formatted HTML
-        msgDiv.innerHTML = formattedText;
         
+        msgDiv.innerHTML = formattedText;
         chatMessagesDiv.appendChild(msgDiv);
         chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
         return msgDiv;
     }
-
+    
     function showTyping() {
         const typingDiv = document.createElement('div');
         typingDiv.classList.add('typing');
-        typingDiv.textContent = `${COMPANION_NAME} is thinking...`;
+        typingDiv.textContent = `${COMPANION_NAME} is watching...`;
         typingDiv.id = 'typingIndicator';
         chatMessagesDiv.appendChild(typingDiv);
         chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
     }
-
+    
     function hideTyping() {
         const typing = document.getElementById('typingIndicator');
         if (typing) typing.remove();
     }
-
+    
     async function sendMessage() {
         const message = userInput.value.trim();
         if (!message) return;
-
+        
         sendBtn.disabled = true;
         userInput.disabled = true;
-
+        
         addMessage('user', message);
         userInput.value = '';
         showTyping();
-
+        
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
@@ -361,34 +322,33 @@ CORE RULES:
                     history: conversationHistory
                 })
             });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
+            
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
             const data = await response.json();
             hideTyping();
             addMessage('bot', data.reply);
-
-            // Update conversation history
+            
             conversationHistory.push({ role: "user", content: message });
             conversationHistory.push({ role: "assistant", content: data.reply });
-
         } catch (error) {
             console.error('Error:', error);
             hideTyping();
-            addMessage('bot', `❌ Oops! Something went wrong: ${error.message}. Please try again.`);
+            addMessage('bot', `❌ Feed interrupted: ${error.message}`);
         } finally {
             sendBtn.disabled = false;
             userInput.disabled = false;
             userInput.focus();
         }
     }
-
+    
     sendBtn.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
     });
+    
+    // Initial greeting
+    addMessage('bot', 'Connection established. I’m already inside your feed, darling. What are you going to show me first?');
 </script>
 </body>
 </html>
